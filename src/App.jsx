@@ -1,12 +1,24 @@
-import "./App.css";
+// import "./App.css";
+import Hero from "./Sections/Hero";
+import OurStory from "./Sections/OurStory";
+import Programme from "./Sections/Programme";
+import Countdown from "./Sections/Countdown";
+import Map from "./Sections/Map";
+import Gallery from "./Sections/Gallery";
+import Rsvp from "./Sections/Rsvp";
+import Footer from "./Sections/Footer";
 
 function App() {
   return (
     <>
-      <div className="container text-center mt-5">
-        <h1 className="text-primary">Mosioma's Wedding Invitation</h1>
-        <button className="btn btn-success mt-3">RSVP</button>
-      </div>
+      <Hero />
+      <OurStory />
+      <Programme />
+      <Countdown />
+      <Gallery />
+      <Rsvp />
+      <Map />
+      <Footer />
     </>
   );
 }
