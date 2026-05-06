@@ -1,16 +1,35 @@
-# React + Vite
+#  Wedding Invitation Website Template
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A beautiful, modern, and fully customizable **wedding invitation website template** built with React.  
+Designed to help couples share their special day with style — all in one elegant digital experience.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Elegant and responsive design (mobile-first)
+- Event details section (date, time, venue)
+- RSVP form integration
+- Photo gallery for memories
+- Google Maps location embed
+- Countdown timer to the big day
+- Easily customizable colors, fonts, and content
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React
+- Vite
+- JavaScript 
+- CSS / Bootstrap
+
+---
+
+## Project Setup
+
+Clone the repository:
+
+```bash
+git clone https://github.com/DBEST-EZRA/Wedding-Website.git
+cd wedding-website
