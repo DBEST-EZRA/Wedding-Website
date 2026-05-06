@@ -1,0 +1,108 @@
+:root {
+  --wine: #722f37;
+}
+
+/* FOOTER BACKGROUND */
+.footer {
+  background: linear-gradient(135deg, #2b0a0f, #3a0f14, #1f1f1f);
+  color: white;
+  padding: 80px 20px 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* SECTION SPACING */
+.footer-section {
+  margin-bottom: 30px;
+}
+
+/* TITLE */
+.footer-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+/* QUOTE */
+.footer-quote {
+  font-style: italic;
+  opacity: 0.85;
+  font-family: "Poppins", sans-serif;
+  line-height: 1.6;
+}
+
+/* HEADINGS */
+.footer h4 {
+  font-family: "Playfair Display", serif;
+  margin-bottom: 15px;
+}
+
+/* LINKS */
+.footer-links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--wine);
+  padding-left: 5px;
+}
+
+/* CTA BUTTON */
+.footer-btn {
+  display: inline-block;
+  background: var(--wine);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.3s ease;
+  margin-top: 10px;
+}
+
+.footer-btn:hover {
+  background: #5a242a;
+  transform: scale(1.05);
+}
+
+/* SMALL TEXT */
+.small-note {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+/* BOTTOM BAR */
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 40px;
+  padding-top: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* SUBTLE ANIMATION */
+.footer {
+  animation: fadeInFooter 1.2s ease forwards;
+}
+
+@keyframes fadeInFooter {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
