@@ -17,6 +17,7 @@ function Hero() {
           Sheila Gisemba <span>&</span> Brian Mosioma
         </h1>
 
+        <p className="subtitle">Invite you to their Happily Ever after</p>
         <p className="romantic-line">
           "Two hearts, one love, and a lifetime of memories begins here."
         </p>
