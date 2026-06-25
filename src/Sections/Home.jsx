@@ -97,18 +97,32 @@ const Petals = () => {
 };
 
 // ── Countdown ────────────────────────────────────────────────────────────────
+// Live countdown — recalculates every second, always accurate to the
+// wall clock (no drift from setInterval timing since we always diff
+// against "now" rather than incrementing a counter).
+const WEDDING_DATE = "2026-08-30T10:00:00";
+
 const useCountdown = (target) => {
-  const [time, setTime] = useState({});
+  const [time, setTime] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    finished: false,
+  });
   useEffect(() => {
     const tick = () => {
       const diff = new Date(target) - new Date();
-      if (diff <= 0)
-        return setTime({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      if (diff <= 0) {
+        setTime({ days: 0, hours: 0, minutes: 0, seconds: 0, finished: true });
+        return;
+      }
       setTime({
         days: Math.floor(diff / 86400000),
         hours: Math.floor((diff % 86400000) / 3600000),
         minutes: Math.floor((diff % 3600000) / 60000),
         seconds: Math.floor((diff % 60000) / 1000),
+        finished: false,
       });
     };
     tick();
@@ -162,7 +176,7 @@ const RSVPForm = () => {
           Thank you, {form.name}!
         </h4>
         <p style={{ color: "#555" }}>
-          We can't wait to celebrate with you. See you on August 30th!
+          We can't wait to celebrate with you. See you on August 30th, 2026!
         </p>
       </div>
     );
@@ -253,7 +267,7 @@ const RSVPForm = () => {
 const Home = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const countdown = useCountdown("2025-08-30T10:00:00");
+  const countdown = useCountdown(WEDDING_DATE);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -677,7 +691,7 @@ const Home = () => {
           >
             invite you to their Happily Ever After
           </p>
-          <div className="wb-date my-4">30th August 2025</div>
+          <div className="wb-date my-4">30th August 2026</div>
           <div className="d-flex gap-3 justify-content-center flex-wrap">
             <button className="btn-maroon" onClick={() => scrollTo("rsvp")}>
               RSVP Now
@@ -811,7 +825,7 @@ const Home = () => {
             </p>
             <h2 className="wb-section-title text-white">Order of Events</h2>
             <p className="wb-section-subtitle light">
-              August 30th, 2025 — Kisii
+              August 30th, 2026 — Kisii
             </p>
             <div className="wb-divider">
               <div
@@ -871,28 +885,32 @@ const Home = () => {
               Countdown to Our Wedding
             </h2>
             <p className="wb-section-subtitle light">
-              Every second brings us closer to forever
+              {countdown.finished
+                ? "We're married! Thank you for celebrating with us."
+                : "Every second brings us closer to forever"}
             </p>
           </div>
-          <div
-            className={`row g-3 justify-content-center mt-4 reveal ${countdownVisible ? "visible" : ""}`}
-          >
-            {[
-              { val: countdown.days, label: "Days" },
-              { val: countdown.hours, label: "Hours" },
-              { val: countdown.minutes, label: "Minutes" },
-              { val: countdown.seconds, label: "Seconds" },
-            ].map((c, i) => (
-              <div key={i} className="col-5 col-md-2">
-                <div className="countdown-box">
-                  <div className="countdown-num">
-                    {String(c.val ?? 0).padStart(2, "0")}
+          {!countdown.finished && (
+            <div
+              className={`row g-3 justify-content-center mt-4 reveal ${countdownVisible ? "visible" : ""}`}
+            >
+              {[
+                { val: countdown.days, label: "Days" },
+                { val: countdown.hours, label: "Hours" },
+                { val: countdown.minutes, label: "Minutes" },
+                { val: countdown.seconds, label: "Seconds" },
+              ].map((c, i) => (
+                <div key={i} className="col-5 col-md-2">
+                  <div className="countdown-box">
+                    <div className="countdown-num">
+                      {String(c.val ?? 0).padStart(2, "0")}
+                    </div>
+                    <div className="countdown-label">{c.label}</div>
                   </div>
-                  <div className="countdown-label">{c.label}</div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
           <div
             className={`mt-5 reveal ${countdownVisible ? "visible" : ""}`}
             style={{ transitionDelay: "200ms" }}
@@ -1017,7 +1035,7 @@ const Home = () => {
                     marginBottom: 28,
                   }}
                 >
-                  Please respond by August 15th, 2025
+                  Please respond by August 15th, 2026
                 </p>
                 <RSVPForm />
               </div>
@@ -1216,7 +1234,7 @@ const Home = () => {
               {
                 icon: Icons.clock,
                 label: "Date & Time",
-                val: "30 August 2025, 10:00 AM",
+                val: "30 August 2026, 10:00 AM",
               },
               {
                 icon: Icons.phone,
@@ -1406,7 +1424,7 @@ const Home = () => {
                 <Icon d={Icons.clock} size={16} color="var(--gold)" />
                 <div>
                   <div style={{ color: "#fff", fontSize: 14, fontWeight: 700 }}>
-                    August 30, 2025
+                    August 30, 2026
                   </div>
                   <div style={{ fontSize: 13 }}>Starting at 10:00 AM</div>
                 </div>
@@ -1446,7 +1464,7 @@ const Home = () => {
             }}
           >
             <p style={{ margin: 0, fontSize: 13 }}>
-              © 2025 Sheila &amp; Brian Wedding. All rights reserved.
+              © 2026 Sheila &amp; Brian Wedding. All rights reserved.
             </p>
             <p style={{ margin: 0, fontSize: 13 }}>
               Crafted with{" "}
