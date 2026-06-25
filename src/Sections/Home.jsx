@@ -660,7 +660,7 @@ const Home = () => {
             <div className="wb-divider-line rev" />
           </div>
           <h1 className="wb-display mb-0">
-            <em>Sheila Gisemba</em>
+            <em>Sheila</em>
           </h1>
           <p
             style={{
@@ -675,7 +675,7 @@ const Home = () => {
             &amp;
           </p>
           <h1 className="wb-display mb-0">
-            <em>Brian Mosioma</em>
+            <em>Brian</em>
           </h1>
           <p className="wb-quote mt-3">
             "Two hearts, one love, and a lifetime of memories begins here."
@@ -937,7 +937,7 @@ const Home = () => {
               Gallery
             </p>
             <h2 className="wb-section-title" style={{ color: "var(--navy)" }}>
-              Our Memories
+              Our Team
             </h2>
             <p className="wb-section-subtitle">
               Moments captured, love remembered
@@ -980,7 +980,7 @@ const Home = () => {
             className="text-center mt-4"
             style={{ color: "var(--gray)", fontStyle: "italic", fontSize: 14 }}
           >
-            * Placeholder photos — your real memories will shine here
+            * Placeholder photos — your real photos will shine here
           </p>
         </div>
       </section>
@@ -1361,7 +1361,7 @@ const Home = () => {
               rel="noopener noreferrer"
             >
               <Icon d={Icons.whatsapp} size={22} color="#fff" />
-              Chat on WhatsApp · 0712 405 172
+              Chat on WhatsApp · 0706 195 000
             </a>
           </div>
 
