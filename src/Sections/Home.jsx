@@ -288,9 +288,9 @@ const Home = () => {
 
   const navLinks = [
     { label: "Our Story", id: "story" },
-    { label: "Events", id: "events" },
+    { label: "Programme", id: "events" },
     { label: "Countdown", id: "countdown" },
-    { label: "Memories", id: "memories" },
+    { label: "Pictorial", id: "memories" },
     { label: "RSVP", id: "rsvp" },
     { label: "Find Us", id: "map" },
   ];
@@ -299,7 +299,7 @@ const Home = () => {
     {
       time: "10:00 AM",
       title: "Guest Arrival",
-      desc: "Guests arrive and are welcomed with refreshments and soft music.",
+      desc: "Guests arrive and are welcomed with soft music & presentations.",
       icon: Icons.users,
     },
     {
@@ -317,7 +317,7 @@ const Home = () => {
     {
       time: "2:00 PM",
       title: "Reception",
-      desc: "Dinner, speeches, and celebration begins.",
+      desc: "Speeches and celebration begins.",
       icon: Icons.gift,
     },
     {
@@ -330,22 +330,41 @@ const Home = () => {
 
   const memories = [
     {
-      src: "https://picsum.photos/seed/wedding1/600/400",
-      label: "First Meeting",
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570919/9_xxjct1.png",
+      label: "Bride & Bridegroom",
     },
     {
-      src: "https://picsum.photos/seed/wedding2/600/400",
-      label: "Our Journey",
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570917/7_tvmido.png",
+      label: "Cellin Nyaboke",
     },
     {
-      src: "https://picsum.photos/seed/couple3/600/400",
-      label: "The Proposal",
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570912/5_efkvao.png",
+      label: "Living Caleb",
     },
-    { src: "https://picsum.photos/seed/couple4/600/400", label: "Engagement" },
-    { src: "https://picsum.photos/seed/couple5/600/400", label: "Together" },
     {
-      src: "https://picsum.photos/seed/wedding6/600/400",
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570911/8_vnexsk.png",
+      label: "Living Caleb",
+    },
+
+    {
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570934/1_dlezo6.png",
+      label: "Engagement",
+    },
+    {
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570933/4_f7tmmf.png",
+      label: "Ezra Daktari",
+    },
+    {
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570928/3_luum8q.png",
       label: "Forever Begins",
+    },
+    {
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570926/2_qjwy9h.png",
+      label: "Engagement",
+    },
+    {
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570925/6_yirjvb.png",
+      label: "Ezra Daktari",
     },
   ];
 
@@ -928,7 +947,9 @@ const Home = () => {
       >
         <div className="container">
           <div
-            className={`text-center mb-5 reveal ${memoriesVisible ? "visible" : ""}`}
+            className={`text-center mb-5 reveal ${
+              memoriesVisible ? "visible" : ""
+            }`}
           >
             <p
               className="wb-script"
@@ -936,52 +957,66 @@ const Home = () => {
             >
               Gallery
             </p>
+
             <h2 className="wb-section-title" style={{ color: "var(--navy)" }}>
               Our Team
             </h2>
+
             <p className="wb-section-subtitle">
               Moments captured, love remembered
             </p>
+
             <div className="wb-divider">
               <div
                 className="wb-divider-line"
                 style={{
                   background:
-                    "linear-gradient(to right,transparent,var(--maroon))",
+                    "linear-gradient(to right, transparent, var(--maroon))",
                 }}
               />
+
               <Icon d={Icons.camera} size={16} color="var(--maroon)" />
+
               <div
                 className="wb-divider-line rev"
                 style={{
                   background:
-                    "linear-gradient(to left,transparent,var(--maroon))",
+                    "linear-gradient(to left, transparent, var(--maroon))",
                 }}
               />
             </div>
           </div>
-          <div className="row g-3">
+
+          <div className="row g-4">
             {memories.map((m, i) => (
               <div
                 key={i}
-                className={`col-6 col-md-4 reveal ${memoriesVisible ? "visible" : ""}`}
+                className={`col-6 col-md-4 col-lg-3 reveal ${
+                  memoriesVisible ? "visible" : ""
+                }`}
                 style={{ transitionDelay: `${i * 80}ms` }}
               >
-                <div className="memory-card">
-                  <img src={m.src} alt={m.label} />
-                  <div className="memory-overlay">
-                    <span className="memory-label">{m.label}</span>
+                <div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                  <div className="ratio ratio-1x1">
+                    <img
+                      src={m.src}
+                      alt={m.label}
+                      className="w-100 h-100 object-fit-cover"
+                    />
+                  </div>
+
+                  <div className="card-body text-center py-3">
+                    <h6
+                      className="card-title mb-0 fw-semibold"
+                      style={{ color: "var(--navy)" }}
+                    >
+                      {m.label}
+                    </h6>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          <p
-            className="text-center mt-4"
-            style={{ color: "var(--gray)", fontStyle: "italic", fontSize: 14 }}
-          >
-            * Placeholder photos — your real photos will shine here
-          </p>
         </div>
       </section>
 
