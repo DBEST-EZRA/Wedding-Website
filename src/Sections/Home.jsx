@@ -305,23 +305,18 @@ const Home = () => {
     {
       time: "11:00 AM",
       title: "Wedding Ceremony",
-      desc: "Exchange of vows between Brian and Sheila.",
+      desc: "Way opener, Pathfinder & Master guides Match pass, Candle Bearers, Flower Girls, Pillow,Bible and Song boys, Bridesmaids & Groomsmen, Best Man & Maid of Honor, bridal Alert, bride and bridegroom, Official Coupe and Family Photography",
       icon: Icons.ring,
     },
+
     {
-      time: "12:30 PM",
-      title: "Photo Session",
-      desc: "Official couple and family photography session.",
-      icon: Icons.camera,
-    },
-    {
-      time: "2:00 PM",
+      time: "1:00 PM",
       title: "Reception",
-      desc: "Speeches and celebration begins.",
+      desc: "Celebration Begins, Hard Music and Refreshments, Entertainment and Dance, Speeches and Gifts, Cake Cutting, Photo Session",
       icon: Icons.gift,
     },
     {
-      time: "6:00 PM",
+      time: "4:00 PM",
       title: "Entertainment & Dance",
       desc: "Music, dancing, and celebration with guests.",
       icon: Icons.music,
@@ -1390,7 +1385,7 @@ const Home = () => {
               ))}
             </div>
             <a
-              href="https://wa.me/254712405172?text=Hi%20Etech%20Solutions!%20I%20saw%20the%20wedding%20website%20and%20I'd%20love%20a%20similar%20one."
+              href="https://wa.me/254706195000?text=Hi%20Etech%20Solutions!%20I%20saw%20the%20wedding%20website%20and%20I'd%20love%20a%20similar%20one."
               className="wa-btn"
               target="_blank"
               rel="noopener noreferrer"
