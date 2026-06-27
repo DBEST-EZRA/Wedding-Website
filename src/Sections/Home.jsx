@@ -339,7 +339,7 @@ const Home = () => {
     },
     {
       src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570912/5_efkvao.png",
-      label: "Living Caleb",
+      label: "Christine Nyakambi",
     },
     {
       src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570911/8_vnexsk.png",
@@ -348,23 +348,23 @@ const Home = () => {
 
     {
       src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570934/1_dlezo6.png",
-      label: "Engagement",
+      label: "Samantha Moraa",
     },
     {
       src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570933/4_f7tmmf.png",
-      label: "Ezra Daktari",
+      label: "Madam Vannie",
     },
     {
       src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570928/3_luum8q.png",
-      label: "Forever Begins",
+      label: "Sharon Kwamboka",
     },
     {
       src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570926/2_qjwy9h.png",
-      label: "Engagement",
+      label: "Deborah Onyangi",
     },
     {
       src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570925/6_yirjvb.png",
-      label: "Ezra Daktari",
+      label: "Zainab",
     },
   ];
 
