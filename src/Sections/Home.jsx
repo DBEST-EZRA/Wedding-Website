@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { addGuest } from "../service/guestService";
 
 // ── Icon components (inline SVG, no emoji) ──────────────────────────────────
 const Icon = ({
@@ -149,8 +150,14 @@ const useReveal = () => {
   return [ref, visible];
 };
 
+//HEREEEEEEEE
 // ── RSVP Form ────────────────────────────────────────────────────────────────
 const RSVPForm = () => {
+  const ATTENDANCE_LABELS = {
+    yes: "Joyfully Accept",
+    no: "Regretfully Decline",
+  };
+
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -158,11 +165,28 @@ const RSVPForm = () => {
     guests: "1",
   });
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
   const handle = (e) =>
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    setSent(true);
+    setError(null);
+    setSubmitting(true);
+    try {
+      await addGuest({
+        name: form.name.trim(),
+        phone: form.phone.trim(),
+        attendance: ATTENDANCE_LABELS[form.attendance],
+        guests: form.attendance === "yes" ? Number(form.guests) : 0,
+      });
+      setSent(true);
+    } catch (err) {
+      console.error("Failed to submit RSVP:", err);
+      setError("Something went wrong sending your RSVP. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
   if (sent)
     return (
@@ -251,17 +275,21 @@ const RSVPForm = () => {
       <button
         type="submit"
         className="btn btn-lg w-100 text-white fw-bold"
+        disabled={submitting}
         style={{
           background: "linear-gradient(135deg, #6B0032, #0A1931)",
           borderRadius: 50,
           letterSpacing: 1,
+          opacity: submitting ? 0.7 : 1,
         }}
       >
-        Send RSVP
+        {submitting ? "Sending..." : "Send RSVP"}
       </button>
     </form>
   );
 };
+
+//HEREEEEEEEE
 
 // ── Main component ───────────────────────────────────────────────────────────
 const Home = () => {
