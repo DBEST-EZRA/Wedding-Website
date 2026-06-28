@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   FaUsers,
   FaCheckCircle,
@@ -9,154 +9,13 @@ import {
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
+import { getGuests } from "../service/guestService";
 
-/**
- * Admin RSVP Dashboard
- * - Bootstrap-based, responsive
- * - Palette: maroon, navy blue, white, gray (+ shades) via CSS variables
- * - Statuses: "Joyfully Accept" / "Regretfully Decline"
- * - WhatsApp action button: normalizes Kenyan numbers (0700..., 254700..., +254700...)
- *   and opens wa.me with a prefilled message
- * - Paginated table for large guest lists
- *
- * Requires: npm install react-icons
- */
-
-// ---------- Statuses ----------
+// ---------- Statuses (must match the "attendance" field values in Firestore) ----------
 const STATUS = {
   ACCEPT: "Joyfully Accept",
   DECLINE: "Regretfully Decline",
 };
-
-// ---------- Dummy data (replace with real API data) ----------
-const DUMMY_GUESTS = [
-  {
-    id: 1,
-    fullName: "Wanjiru Kamau",
-    phone: "0712345678",
-    status: STATUS.ACCEPT,
-    guests: 2,
-  },
-  {
-    id: 2,
-    fullName: "Otieno Brian",
-    phone: "254723456789",
-    status: STATUS.ACCEPT,
-    guests: 1,
-  },
-  {
-    id: 3,
-    fullName: "Amina Hassan",
-    phone: "+254734567890",
-    status: STATUS.ACCEPT,
-    guests: 4,
-  },
-  {
-    id: 4,
-    fullName: "David Mwangi",
-    phone: "0745678901",
-    status: STATUS.DECLINE,
-    guests: 0,
-  },
-  {
-    id: 5,
-    fullName: "Faith Chebet",
-    phone: "254756789012",
-    status: STATUS.ACCEPT,
-    guests: 3,
-  },
-  {
-    id: 6,
-    fullName: "Peter Kiprono",
-    phone: "+254767890123",
-    status: STATUS.DECLINE,
-    guests: 0,
-  },
-  {
-    id: 7,
-    fullName: "Grace Nyambura",
-    phone: "0778901234",
-    status: STATUS.ACCEPT,
-    guests: 2,
-  },
-  {
-    id: 8,
-    fullName: "Samuel Ouma",
-    phone: "254789012345",
-    status: STATUS.ACCEPT,
-    guests: 5,
-  },
-  {
-    id: 9,
-    fullName: "Mercy Atieno",
-    phone: "0701122334",
-    status: STATUS.ACCEPT,
-    guests: 2,
-  },
-  {
-    id: 10,
-    fullName: "John Kariuki",
-    phone: "254712233445",
-    status: STATUS.DECLINE,
-    guests: 0,
-  },
-  {
-    id: 11,
-    fullName: "Lilian Wambui",
-    phone: "+254723344556",
-    status: STATUS.ACCEPT,
-    guests: 1,
-  },
-  {
-    id: 12,
-    fullName: "Brian Cheruiyot",
-    phone: "0734455667",
-    status: STATUS.ACCEPT,
-    guests: 3,
-  },
-  {
-    id: 13,
-    fullName: "Esther Njoki",
-    phone: "254745566778",
-    status: STATUS.ACCEPT,
-    guests: 2,
-  },
-  {
-    id: 14,
-    fullName: "Kevin Omondi",
-    phone: "+254756677889",
-    status: STATUS.DECLINE,
-    guests: 0,
-  },
-  {
-    id: 15,
-    fullName: "Diana Mutua",
-    phone: "0767788990",
-    status: STATUS.ACCEPT,
-    guests: 4,
-  },
-  {
-    id: 16,
-    fullName: "Tom Wekesa",
-    phone: "254778899001",
-    status: STATUS.ACCEPT,
-    guests: 1,
-  },
-  {
-    id: 17,
-    fullName: "Joy Akinyi",
-    phone: "+254789900112",
-    status: STATUS.DECLINE,
-    guests: 0,
-  },
-  {
-    id: 18,
-    fullName: "Nicholas Mbugua",
-    phone: "0790011223",
-    status: STATUS.ACCEPT,
-    guests: 3,
-  },
-];
 
 // ---------- Phone helpers ----------
 // Normalizes Kenyan numbers typed as 0700000000 / 254700000000 / +254700000000
@@ -219,42 +78,72 @@ const Admin = () => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
+  const [guests, setGuests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchGuests = async () => {
+      try {
+        setLoading(true);
+        const data = await getGuests();
+
+        const formattedGuests = data.map((guest) => ({
+          id: guest.id,
+          fullName: guest.name,
+          phone: guest.phone,
+          status: guest.attendance,
+          guests: guest.guests,
+        }));
+
+        setGuests(formattedGuests);
+        setError(null);
+      } catch (err) {
+        console.error("Failed to fetch guests:", err);
+        setError("Couldn't load guests. Please refresh the page.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGuests();
+  }, []);
 
   const totalGuests = useMemo(
     () =>
-      DUMMY_GUESTS.reduce(
+      guests.reduce(
         (sum, g) => sum + (g.status === STATUS.ACCEPT ? g.guests : 0),
         0,
       ),
-    [],
+    [guests],
   );
 
   const totalAccepted = useMemo(
-    () => DUMMY_GUESTS.filter((g) => g.status === STATUS.ACCEPT).length,
-    [],
+    () => guests.filter((g) => g.status === STATUS.ACCEPT).length,
+    [guests],
   );
 
   const totalDeclined = useMemo(
-    () => DUMMY_GUESTS.filter((g) => g.status === STATUS.DECLINE).length,
-    [],
+    () => guests.filter((g) => g.status === STATUS.DECLINE).length,
+    [guests],
   );
 
   const filtered = useMemo(() => {
-    return DUMMY_GUESTS.filter((g) => {
+    return guests.filter((g) => {
       const matchesSearch =
-        g.fullName.toLowerCase().includes(search.toLowerCase()) ||
-        g.phone.includes(search.replace(/[^\d]/g, ""));
+        (g.fullName || "").toLowerCase().includes(search.toLowerCase()) ||
+        (g.phone || "").includes(search.replace(/[^\d]/g, ""));
       const matchesStatus = statusFilter === "All" || g.status === statusFilter;
       return matchesSearch && matchesStatus;
     });
-  }, [search, statusFilter]);
+  }, [guests, search, statusFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
 
-  // Reset to page 1 whenever filters change
+  // Reset to page 1 whenever filters (or the underlying data) change
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, statusFilter]);
+  }, [search, statusFilter, guests]);
 
   const paginated = useMemo(() => {
     const start = (currentPage - 1) * PAGE_SIZE;
@@ -526,6 +415,22 @@ const Admin = () => {
           border-color: var(--maroon);
         }
 
+        .alert-banner {
+          background: var(--maroon-light);
+          color: var(--maroon-dark);
+          border: 1px solid var(--maroon);
+          border-radius: 0.6rem;
+          padding: 0.75rem 1rem;
+          font-size: 0.9rem;
+          margin-bottom: 1rem;
+        }
+
+        .loading-state {
+          text-align: center;
+          padding: 3rem 1rem;
+          color: var(--gray-700);
+        }
+
         @media (max-width: 576px) {
           .stat-value { font-size: 1.5rem; }
         }
@@ -540,6 +445,8 @@ const Admin = () => {
       </div>
 
       <div className="container-fluid p-3 p-md-4">
+        {error && <div className="alert-banner">{error}</div>}
+
         {/* Stats row */}
         <div className="row g-3 mb-3">
           <div className="col-12 col-sm-6 col-lg-3">
@@ -548,7 +455,9 @@ const Admin = () => {
               <div className="stat-body d-flex justify-content-between align-items-center">
                 <div>
                   <div className="stat-label">Total Guests</div>
-                  <div className="stat-value">{totalGuests}</div>
+                  <div className="stat-value">
+                    {loading ? "—" : totalGuests}
+                  </div>
                 </div>
                 <div
                   className="stat-icon"
@@ -566,7 +475,9 @@ const Admin = () => {
               <div className="stat-body d-flex justify-content-between align-items-center">
                 <div>
                   <div className="stat-label">Joyfully Accepted</div>
-                  <div className="stat-value">{totalAccepted}</div>
+                  <div className="stat-value">
+                    {loading ? "—" : totalAccepted}
+                  </div>
                 </div>
                 <div
                   className="stat-icon"
@@ -584,7 +495,9 @@ const Admin = () => {
               <div className="stat-body d-flex justify-content-between align-items-center">
                 <div>
                   <div className="stat-label">Regretfully Declined</div>
-                  <div className="stat-value">{totalDeclined}</div>
+                  <div className="stat-value">
+                    {loading ? "—" : totalDeclined}
+                  </div>
                 </div>
                 <div
                   className="stat-icon"
@@ -602,7 +515,9 @@ const Admin = () => {
               <div className="stat-body d-flex justify-content-between align-items-center">
                 <div>
                   <div className="stat-label">Total RSVPs</div>
-                  <div className="stat-value">{DUMMY_GUESTS.length}</div>
+                  <div className="stat-value">
+                    {loading ? "—" : guests.length}
+                  </div>
                 </div>
                 <div
                   className="stat-icon"
@@ -627,6 +542,7 @@ const Admin = () => {
                   placeholder="Search by name or phone number..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -635,6 +551,7 @@ const Admin = () => {
                 className="form-select status-select"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
+                disabled={loading}
               >
                 <option value="All">All statuses</option>
                 <option value={STATUS.ACCEPT}>Joyfully Accept</option>
@@ -642,122 +559,130 @@ const Admin = () => {
               </select>
             </div>
             <div className="col-12 col-md-3 text-md-end text-muted small">
-              Showing {filtered.length} of {DUMMY_GUESTS.length} guests
+              {loading
+                ? "Loading guests..."
+                : `Showing ${filtered.length} of ${guests.length} guests`}
             </div>
           </div>
         </div>
 
         {/* Table */}
         <div className="table-card">
-          <div className="table-responsive">
-            <table className="table mb-0">
-              <thead>
-                <tr>
-                  <th>Full Name</th>
-                  <th>Phone Number</th>
-                  <th>Attendance Status</th>
-                  <th className="text-center">Guests</th>
-                  <th className="text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginated.map((g) => {
-                  const validNumber = !!normalizeKenyanPhone(g.phone);
-                  return (
-                    <tr key={g.id}>
-                      <td className="guest-name">{g.fullName}</td>
-                      <td className="guest-phone">
-                        {formatDisplayPhone(g.phone)}
-                      </td>
-                      <td>
-                        <StatusBadge status={g.status} />
-                      </td>
-                      <td className="text-center">{g.guests}</td>
-                      <td className="text-center">
-                        <button
-                          className="whatsapp-btn"
-                          disabled={!validNumber}
-                          onClick={() =>
-                            handleWhatsApp(g.phone, g.fullName, g.status)
-                          }
-                          title={
-                            validNumber
-                              ? "Message on WhatsApp"
-                              : "Invalid phone number"
-                          }
-                        >
-                          <FaWhatsapp /> WhatsApp
-                        </button>
-                      </td>
+          {loading ? (
+            <div className="loading-state">Loading guest list…</div>
+          ) : (
+            <>
+              <div className="table-responsive">
+                <table className="table mb-0">
+                  <thead>
+                    <tr>
+                      <th>Full Name</th>
+                      <th>Phone Number</th>
+                      <th>Attendance Status</th>
+                      <th className="text-center">Guests</th>
+                      <th className="text-center">Action</th>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-
-          {filtered.length === 0 && (
-            <div className="empty-state">
-              <div className="empty-icon">
-                <FaSearch />
+                  </thead>
+                  <tbody>
+                    {paginated.map((g) => {
+                      const validNumber = !!normalizeKenyanPhone(g.phone);
+                      return (
+                        <tr key={g.id}>
+                          <td className="guest-name">{g.fullName}</td>
+                          <td className="guest-phone">
+                            {formatDisplayPhone(g.phone)}
+                          </td>
+                          <td>
+                            <StatusBadge status={g.status} />
+                          </td>
+                          <td className="text-center">{g.guests}</td>
+                          <td className="text-center">
+                            <button
+                              className="whatsapp-btn"
+                              disabled={!validNumber}
+                              onClick={() =>
+                                handleWhatsApp(g.phone, g.fullName, g.status)
+                              }
+                              title={
+                                validNumber
+                                  ? "Message on WhatsApp"
+                                  : "Invalid phone number"
+                              }
+                            >
+                              <FaWhatsapp /> WhatsApp
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
-              <div>No guests match your search.</div>
-            </div>
-          )}
 
-          {/* Pagination */}
-          {filtered.length > 0 && (
-            <div className="pagination-bar">
-              <div className="pagination-info">
-                Page {currentPage} of {totalPages}
-              </div>
-              <div className="d-flex align-items-center gap-1">
-                <button
-                  className="page-btn"
-                  onClick={() => goToPage(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  <FaChevronLeft /> Prev
-                </button>
+              {filtered.length === 0 && (
+                <div className="empty-state">
+                  <div className="empty-icon">
+                    <FaSearch />
+                  </div>
+                  <div>No guests match your search.</div>
+                </div>
+              )}
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter(
-                    (p) =>
-                      Math.abs(p - currentPage) <= 1 ||
-                      p === 1 ||
-                      p === totalPages,
-                  )
-                  .reduce((acc, p, idx, arr) => {
-                    if (idx > 0 && p - arr[idx - 1] > 1)
-                      acc.push("ellipsis-" + p);
-                    acc.push(p);
-                    return acc;
-                  }, [])
-                  .map((p) =>
-                    typeof p === "string" ? (
-                      <span key={p} className="px-1 text-muted">
-                        …
-                      </span>
-                    ) : (
-                      <button
-                        key={p}
-                        className={`page-btn ${p === currentPage ? "active" : ""}`}
-                        onClick={() => goToPage(p)}
-                      >
-                        {p}
-                      </button>
-                    ),
-                  )}
+              {/* Pagination */}
+              {filtered.length > 0 && (
+                <div className="pagination-bar">
+                  <div className="pagination-info">
+                    Page {currentPage} of {totalPages}
+                  </div>
+                  <div className="d-flex align-items-center gap-1">
+                    <button
+                      className="page-btn"
+                      onClick={() => goToPage(currentPage - 1)}
+                      disabled={currentPage === 1}
+                    >
+                      <FaChevronLeft /> Prev
+                    </button>
 
-                <button
-                  className="page-btn"
-                  onClick={() => goToPage(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                >
-                  Next <FaChevronRight />
-                </button>
-              </div>
-            </div>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                      .filter(
+                        (p) =>
+                          Math.abs(p - currentPage) <= 1 ||
+                          p === 1 ||
+                          p === totalPages,
+                      )
+                      .reduce((acc, p, idx, arr) => {
+                        if (idx > 0 && p - arr[idx - 1] > 1)
+                          acc.push("ellipsis-" + p);
+                        acc.push(p);
+                        return acc;
+                      }, [])
+                      .map((p) =>
+                        typeof p === "string" ? (
+                          <span key={p} className="px-1 text-muted">
+                            …
+                          </span>
+                        ) : (
+                          <button
+                            key={p}
+                            className={`page-btn ${p === currentPage ? "active" : ""}`}
+                            onClick={() => goToPage(p)}
+                          >
+                            {p}
+                          </button>
+                        ),
+                      )}
+
+                    <button
+                      className="page-btn"
+                      onClick={() => goToPage(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next <FaChevronRight />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
