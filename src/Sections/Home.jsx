@@ -361,6 +361,10 @@ const Home = () => {
       label: "Cellin Nyaboke",
     },
     {
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782661896/5_asxmtc.png",
+      label: "Mwalimu Ochenge",
+    },
+    {
       src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570912/5_efkvao.png",
       label: "Christine Nyakambi",
     },
@@ -374,20 +378,40 @@ const Home = () => {
       label: "Samantha Moraa",
     },
     {
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782661895/4_uxr19p.png",
+      label: "Engineer Edrian",
+    },
+    {
       src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570933/4_f7tmmf.png",
       label: "Madam Vannie",
+    },
+    {
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782661895/3_bxagju.png",
+      label: "King Joe",
     },
     {
       src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570928/3_luum8q.png",
       label: "Sharon Kwamboka",
     },
     {
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782661892/1_b25fsp.png",
+      label: "Wycliffe",
+    },
+    {
       src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570926/2_qjwy9h.png",
       label: "Deborah Onyangi",
     },
     {
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782661890/6_buj4is.png",
+      label: "Eugene",
+    },
+    {
       src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570925/6_yirjvb.png",
       label: "Zainab",
+    },
+    {
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782661889/2_fnpox9.png",
+      label: "Clinton",
     },
   ];
 
