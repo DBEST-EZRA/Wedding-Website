@@ -221,7 +221,7 @@ const RSVPForm = () => {
           onChange={handle}
           style={{ borderColor: "#6B0032", borderRadius: 8 }}
         >
-          <option value="yes">Joyfully Accept 🎊</option>
+          <option value="yes">Joyfully Accept </option>
           <option value="no">Regretfully Decline</option>
         </select>
       </div>
@@ -312,13 +312,13 @@ const Home = () => {
     {
       time: "1:00 PM",
       title: "Reception",
-      desc: "Celebration Begins, Hard Music and Refreshments, Entertainment and Dance, Speeches and Gifts, Cake Cutting, Photo Session",
+      desc: "Celebration Begins, Hard Music and Refreshments, Entertainment and Dance, Speeches and Gifts, Cake Cutting",
       icon: Icons.gift,
     },
     {
       time: "4:00 PM",
       title: "Entertainment & Dance",
-      desc: "Music, dancing, and celebration with guests.",
+      desc: "Music, dancing, celebration with guests and Photo Session.",
       icon: Icons.music,
     },
   ];
@@ -1070,6 +1070,7 @@ const Home = () => {
                 <RSVPForm />
               </div>
             </div>
+
             {/* Contribution */}
             <div
               className={`col-lg-6 reveal-right ${rsvpVisible ? "visible" : ""}`}
@@ -1161,7 +1162,7 @@ const Home = () => {
                     "Enter number: 0706 195 000",
                     "Enter your gift amount",
                     "Use reference: Brian & Sheila",
-                    "Confirm and send 🎊",
+                    "Confirm and send ",
                   ].map((s, i) => (
                     <div
                       key={i}
