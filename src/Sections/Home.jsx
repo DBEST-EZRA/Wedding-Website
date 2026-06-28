@@ -470,7 +470,7 @@ const Home = () => {
     .wb-hero::before {
       content: '';
       position: absolute; inset: 0;
-      background: url('https://picsum.photos/seed/weddingbg/1600/900') center/cover no-repeat;
+      background: url('https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570919/9_xxjct1.png') center/cover no-repeat;
       opacity: 0.12;
     }
     .wb-hero-content { position: relative; z-index: 2; text-align: center; padding: 20px; }
