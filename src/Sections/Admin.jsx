@@ -8,8 +8,12 @@ import {
   FaSearch,
   FaChevronLeft,
   FaChevronRight,
+  FaFileCsv,
+  FaFilePdf,
 } from "react-icons/fa";
 import { getGuests } from "../service/guestService";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 // ---------- Statuses (must match the "attendance" field values in Firestore) ----------
 const STATUS = {
@@ -53,6 +57,83 @@ function buildWhatsAppLink(rawPhone, fullName, status) {
       ? `Hi ${firstName}, thank you for letting us know. We're sorry you can't make it, but we appreciate your response and hope to see you next time! 💛`
       : `Hi ${firstName}, thank you for your RSVP! We're excited to have you join us. If you need any details about the event, just reply here. 🎉`;
   return `https://wa.me/${normalized}?text=${encodeURIComponent(message)}`;
+}
+
+// ---------- CSV / PDF export helpers ----------
+function escapeCsvValue(value) {
+  const str = String(value ?? "");
+  if (/[",\n]/.test(str)) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function exportGuestsToCSV(rows, filename = "guest-list.csv") {
+  const headers = ["Full Name", "Phone Number", "Attendance Status", "Guests"];
+  const lines = [
+    headers.join(","),
+    ...rows.map((g) =>
+      [
+        escapeCsvValue(g.fullName),
+        escapeCsvValue(formatDisplayPhone(g.phone)),
+        escapeCsvValue(g.status),
+        escapeCsvValue(g.guests),
+      ].join(","),
+    ),
+  ];
+  // Prefix with BOM so Excel opens UTF-8 correctly
+  const blob = new Blob(["\uFEFF" + lines.join("\n")], {
+    type: "text/csv;charset=utf-8;",
+  });
+  downloadBlob(blob, filename);
+}
+
+function exportGuestsToPDF(rows, filename = "guest-list.pdf") {
+  const doc = new jsPDF({ orientation: "landscape" });
+
+  doc.setFontSize(16);
+  doc.setTextColor(122, 31, 43); // maroon
+  doc.text("Event RSVP Guest List", 14, 16);
+
+  doc.setFontSize(10);
+  doc.setTextColor(100, 100, 100);
+  doc.text(`Exported on ${new Date().toLocaleString()}`, 14, 22);
+
+  autoTable(doc, {
+    startY: 28,
+    head: [["Full Name", "Phone Number", "Attendance Status", "Guests"]],
+    body: rows.map((g) => [
+      g.fullName,
+      formatDisplayPhone(g.phone),
+      g.status,
+      g.guests,
+    ]),
+    headStyles: {
+      fillColor: [27, 42, 74], // navy
+      textColor: 255,
+      fontStyle: "bold",
+    },
+    alternateRowStyles: {
+      fillColor: [246, 230, 233], // maroon-light
+    },
+    styles: {
+      fontSize: 9,
+      cellPadding: 3,
+    },
+  });
+
+  doc.save(filename);
 }
 
 // ---------- Status badge ----------
@@ -162,6 +243,22 @@ const Admin = () => {
   const goToPage = (page) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
+  };
+
+  const handleExportCSV = () => {
+    if (filtered.length === 0) {
+      alert("There are no guests to export.");
+      return;
+    }
+    exportGuestsToCSV(filtered);
+  };
+
+  const handleExportPDF = () => {
+    if (filtered.length === 0) {
+      alert("There are no guests to export.");
+      return;
+    }
+    exportGuestsToPDF(filtered);
   };
 
   return (
@@ -281,6 +378,45 @@ const Admin = () => {
         .status-select:focus {
           border-color: var(--navy);
           box-shadow: 0 0 0 0.2rem rgba(27,42,74,0.15);
+        }
+
+        .export-btn {
+          border: 1px solid var(--gray-300);
+          background: var(--white);
+          color: var(--navy-dark);
+          border-radius: 0.5rem;
+          padding: 0.45rem 0.8rem;
+          font-size: 0.85rem;
+          font-weight: 600;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+          white-space: nowrap;
+        }
+        .export-btn:hover:not(:disabled) {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        .export-btn:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+        }
+        .export-btn-csv {
+          border-color: var(--navy);
+          color: var(--navy);
+        }
+        .export-btn-csv:hover:not(:disabled) {
+          background: var(--navy-light);
+        }
+        .export-btn-pdf {
+          border-color: var(--maroon);
+          color: var(--maroon);
+        }
+        .export-btn-pdf:hover:not(:disabled) {
+          background: var(--maroon-light);
         }
 
         .table-card {
@@ -533,7 +669,7 @@ const Admin = () => {
         {/* Toolbar */}
         <div className="toolbar-card p-3 mb-3">
           <div className="row g-2 align-items-center">
-            <div className="col-12 col-md-6">
+            <div className="col-12 col-md-5">
               <div className="search-wrap">
                 <FaSearch className="search-icon" />
                 <input
@@ -546,7 +682,7 @@ const Admin = () => {
                 />
               </div>
             </div>
-            <div className="col-12 col-md-3">
+            <div className="col-12 col-md-2">
               <select
                 className="form-select status-select"
                 value={statusFilter}
@@ -558,7 +694,27 @@ const Admin = () => {
                 <option value={STATUS.DECLINE}>Regretfully Decline</option>
               </select>
             </div>
-            <div className="col-12 col-md-3 text-md-end text-muted small">
+            <div className="col-12 col-md-5 d-flex justify-content-md-end gap-2 flex-wrap">
+              <button
+                className="export-btn export-btn-csv"
+                onClick={handleExportCSV}
+                disabled={loading || filtered.length === 0}
+                title="Download filtered list as CSV"
+              >
+                <FaFileCsv /> Export CSV
+              </button>
+              <button
+                className="export-btn export-btn-pdf"
+                onClick={handleExportPDF}
+                disabled={loading || filtered.length === 0}
+                title="Download filtered list as PDF"
+              >
+                <FaFilePdf /> Export PDF
+              </button>
+            </div>
+          </div>
+          <div className="row mt-2">
+            <div className="col-12 text-md-end text-muted small">
               {loading
                 ? "Loading guests..."
                 : `Showing ${filtered.length} of ${guests.length} guests`}
