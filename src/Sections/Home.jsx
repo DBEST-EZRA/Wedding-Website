@@ -357,6 +357,10 @@ const Home = () => {
       label: "Bride & Bridegroom",
     },
     {
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570919/2_r7nih8.png",
+      label: "Best Couple",
+    },
+    {
       src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782570917/7_tvmido.png",
       label: "Cellin Nyaboke",
     },
@@ -412,6 +416,10 @@ const Home = () => {
     {
       src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782661889/2_fnpox9.png",
       label: "Clinton",
+    },
+    {
+      src: "https://res.cloudinary.com/dxrjntrjb/image/upload/v1782661889/1_afe1pe.png",
+      label: "Ivy Osoro",
     },
   ];
 
